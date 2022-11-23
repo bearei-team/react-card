@@ -9,12 +9,12 @@ import {handleEvent} from '@bearei/react-util/lib/event';
 export interface CardProps
   extends Omit<
     React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & ViewProps,
-    ''
+    'title'
   > {
   /**
    * Card header title
    */
-  title?: string;
+  title?: React.ReactNode;
 
   /**
    * Set the card size
