@@ -13,7 +13,7 @@ import React from 'React';
 import ReactDOM from 'react-dom';
 import Card from '@bearei/react-card';
 
-const CardComponent = (
+const card = (
   <Card
     title="card"
     renderHeader={({title}) => <div data-cy="header">{title}</div>}
@@ -27,5 +27,5 @@ const CardComponent = (
   />
 );
 
-ReactDOM.render(CardComponent, container);
+ReactDOM.render(card, container);
 ```
