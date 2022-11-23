@@ -9,22 +9,22 @@ import {handleEvent} from '@bearei/react-util/lib/event';
 export interface CardProps
   extends Omit<
     React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & ViewProps,
-    ''
+    'title'
   > {
   /**
    * Card header title
    */
-  title?: string;
+  title?: React.ReactNode;
 
   /**
    * Set the card size
    */
-  size?: 'default' | 'small' | 'large';
+  size?: 'small' | 'medium' | 'large';
 
   /**
    * Set the card shape
    */
-  shape?: 'default' | 'circle' | 'round';
+  shape?: 'square' | 'circle' | 'round';
 
   /**
    * Loading can be used to display a placeholder while the card content is still loading
@@ -57,18 +57,18 @@ export interface CardProps
   renderContainer?: (props: CardContainerProps, element?: React.ReactNode) => React.ReactNode;
 }
 
+/**
+ * Card children props
+ */
 export interface CardChildrenProps
-  extends Omit<
-    CardProps,
-    'renderContainer' | 'renderMain' | 'renderHeader' | 'renderFooter' | 'ref'
-  > {
+  extends Omit<CardProps, 'renderContainer' | 'renderMain' | 'renderHeader' | 'renderFooter'> {
   /**
    * Unique ID of card component
    */
   id: string;
 
   /**
-   * Used to handle some common default events.
+   * Used to handle some common default events
    */
   handleEvent: typeof handleEvent;
 }
@@ -77,11 +77,6 @@ export interface CardChildrenProps
  * Card main props
  */
 export type CardMainProps = CardChildrenProps;
-
-/**
- * Card container props
- */
-export type CardContainerProps = CardChildrenProps;
 
 /**
  * Card header props
@@ -93,29 +88,33 @@ export type CardHeaderProps = CardChildrenProps;
  */
 export type CardFooterProps = CardChildrenProps;
 
+/**
+ * Card container props
+ */
+export type CardContainerProps = Pick<CardProps, 'ref'> & CardChildrenProps;
+
 const Card: React.FC<CardProps> = ({
+  ref,
   renderHeader,
-  renderContainer,
   renderMain,
   renderFooter,
+  renderContainer,
   ...args
 }) => {
   const id = useId();
   const childrenProps = {...args, id, handleEvent};
   const headerElement = <>{renderHeader?.(childrenProps)}</>;
-  const renderElement = <>{renderFooter?.(childrenProps)}</>;
+  const footerElement = <>{renderFooter?.(childrenProps)}</>;
   const mainElement = (
     <>
       {headerElement}
       {renderMain?.(childrenProps)}
-      {renderElement}
+      {footerElement}
     </>
   );
 
-  const containerElement = renderContainer ? (
-    renderContainer?.(childrenProps, mainElement)
-  ) : (
-    <>{mainElement}</>
+  const containerElement = (
+    <>{renderContainer ? renderContainer?.({...childrenProps, ref}, mainElement) : mainElement}</>
   );
 
   return <>{containerElement}</>;
