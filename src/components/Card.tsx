@@ -13,7 +13,7 @@ export interface BaseCardProps<T>
     'title' | 'ref'
   > {
   /**
-   * Custom button ref
+   * Custom card ref
    */
   ref?: Ref<T>;
 
@@ -23,12 +23,12 @@ export interface BaseCardProps<T>
   title?: ReactNode;
 
   /**
-   * Set the button size
+   * Set the card size
    */
   size?: 'small' | 'medium' | 'large';
 
   /**
-   * Set the button shape
+   * Set the card shape
    */
   shape?: 'square' | 'circle' | 'round';
 
@@ -41,6 +41,11 @@ export interface BaseCardProps<T>
    * Whether or not to disable the card
    */
   disabled?: boolean;
+
+  /**
+   * The main area content of the card
+   */
+  content?: ReactNode;
 }
 
 /**
@@ -50,22 +55,22 @@ export interface CardProps<T> extends BaseCardProps<T> {
   /**
    * Render the card header
    */
-  renderHeader?: (props: CardHeaderProps<T>) => React.ReactNode;
+  renderHeader?: (props: CardHeaderProps<T>) => ReactNode;
 
   /**
    * Render the card main
    */
-  renderMain?: (props: CardMainProps<T>) => React.ReactNode;
+  renderMain?: (props: CardMainProps<T>) => ReactNode;
 
   /**
    * Render the card footer
    */
-  renderFooter?: (props: CardHeaderProps<T>) => React.ReactNode;
+  renderFooter?: (props: CardHeaderProps<T>) => ReactNode;
 
   /**
    * Render the card container
    */
-  renderContainer?: (props: CardContainerProps<T>, element?: React.ReactNode) => React.ReactNode;
+  renderContainer?: (props: CardContainerProps<T>, element?: ReactNode) => ReactNode;
 }
 
 /**
