@@ -11,9 +11,9 @@ describe('test/components/Card.test.ts', () => {
         renderHeader={({title}) => <div data-cy="header">{title}</div>}
         renderMain={({title}) => <div data-cy="card">{title}</div>}
         renderFooter={({title}) => <div data-cy="footer">{title}</div>}
-        renderContainer={({id}, element) => (
+        renderContainer={({id, children}) => (
           <div data-cy="container" data-id={id} tabIndex={1}>
-            {element}
+            {children}
           </div>
         )}
       />,
