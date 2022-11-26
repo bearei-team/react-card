@@ -11,7 +11,7 @@ A basic card component that supports react and native react.
 | Name | Type | Required | Description |
 | :-- | --: | --: | :-- |
 | title | `ReactNode` | ✘ | Card header title |
-| size | '`small` `medium` `large` | ✘ | Set the card size |
+| size | `small` `medium` `large` | ✘ | Set the card size |
 | shape | `square` `circle` `round` | ✘ | Set the card shape |
 | loading | `boolean` | ✘ | Loading can be used to display a placeholder while the card content is still loading |
 | disabled | `boolean` | ✘ | Whether or not to disable the card |
