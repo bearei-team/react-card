@@ -1,8 +1,8 @@
-import {useId} from 'react';
-import type {DetailedHTMLProps, HTMLAttributes, ReactNode, Ref} from 'react';
-import type {ViewProps} from 'react-native';
-import handleEvent from '@bearei/react-util/lib/event';
 import type {HandleEvent} from '@bearei/react-util/lib/event';
+import handleEvent from '@bearei/react-util/lib/event';
+import type {DetailedHTMLProps, HTMLAttributes, ReactNode, Ref} from 'react';
+import {useId} from 'react';
+import type {ViewProps} from 'react-native';
 
 /**
  * Base card props
@@ -12,9 +12,6 @@ export interface BaseCardProps<T>
     DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement> & ViewProps,
     'title' | 'ref'
   > {
-  /**
-   * Custom card ref
-   */
   ref?: Ref<T>;
 
   /**
@@ -65,12 +62,12 @@ export interface CardProps<T> extends BaseCardProps<T> {
   /**
    * Render the card footer
    */
-  renderFooter?: (props: CardHeaderProps<T>) => ReactNode;
+  renderFooter?: (props: CardFooterProps<T>) => ReactNode;
 
   /**
    * Render the card container
    */
-  renderContainer?: (props: CardContainerProps<T>, element?: ReactNode) => ReactNode;
+  renderContainer?: (props: CardContainerProps<T>) => ReactNode;
 }
 
 /**
@@ -82,9 +79,10 @@ export interface CardChildrenProps<T>
     'renderContainer' | 'renderMain' | 'renderHeader' | 'renderFooter' | 'ref'
   > {
   /**
-   * Unique ID of card component
+   * The unique ID of the component
    */
   id: string;
+  children?: ReactNode;
 
   /**
    * Used to handle some common default events
@@ -92,24 +90,9 @@ export interface CardChildrenProps<T>
   handleEvent: HandleEvent;
 }
 
-/**
- * Card main props
- */
 export type CardMainProps<T> = CardChildrenProps<T>;
-
-/**
- * Card header props
- */
 export type CardHeaderProps<T> = CardChildrenProps<T>;
-
-/**
- * Card footer props
- */
 export type CardFooterProps<T> = CardChildrenProps<T>;
-
-/**
- * Card container props
- */
 export type CardContainerProps<T> = Pick<CardProps<T>, 'ref'> & CardChildrenProps<T>;
 
 function Card<T>({
@@ -118,25 +101,23 @@ function Card<T>({
   renderMain,
   renderFooter,
   renderContainer,
-  ...args
+  ...props
 }: CardProps<T>) {
   const id = useId();
-  const childrenProps = {...args, id, handleEvent};
-  const headerElement = <>{renderHeader?.(childrenProps)}</>;
-  const footerElement = <>{renderFooter?.(childrenProps)}</>;
-  const mainElement = (
+  const childrenProps = {...props, id, handleEvent};
+  const header = renderHeader?.(childrenProps);
+  const footer = renderFooter?.(childrenProps);
+  const main = (
     <>
-      {headerElement}
+      {header}
       {renderMain?.(childrenProps)}
-      {footerElement}
+      {footer}
     </>
   );
 
-  const containerElement = (
-    <>{renderContainer?.({...childrenProps, ref}, mainElement) ?? mainElement}</>
-  );
+  const container = renderContainer?.({...childrenProps, children: main, ref}) ?? main;
 
-  return <>{containerElement}</>;
+  return <>{container}</>;
 }
 
 export default Card;
