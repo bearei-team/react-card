@@ -70,11 +70,7 @@ export interface CardProps<T, E> extends BaseCardProps<T, E> {
 /**
  * Card children props
  */
-export interface CardChildrenProps<T, E>
-  extends Omit<
-    CardProps<T, E>,
-    'renderContainer' | 'renderMain' | 'renderHeader' | 'renderFooter' | 'ref'
-  > {
+export interface CardChildrenProps<T, E> extends Omit<BaseCardProps<T, E>, 'ref'> {
   /**
    * The unique ID of the component
    */
@@ -90,7 +86,7 @@ export interface CardChildrenProps<T, E>
 export type CardMainProps<T, E> = CardChildrenProps<T, E>;
 export type CardHeaderProps<T, E> = CardChildrenProps<T, E>;
 export type CardFooterProps<T, E> = CardChildrenProps<T, E>;
-export type CardContainerProps<T, E> = Pick<CardProps<T, E>, 'ref'> & CardChildrenProps<T, E>;
+export type CardContainerProps<T, E> = CardChildrenProps<T, E> & Pick<BaseCardProps<T, E>, 'ref'>;
 
 function Card<T, E = React.MouseEvent<T, MouseEvent>>({
   ref,
