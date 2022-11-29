@@ -86,12 +86,14 @@ export interface CardChildrenProps<T, E> extends Omit<BaseCardProps<T, E>, 'ref'
   handleEvent: HandleEvent;
 }
 
+export type CardClickEvent<T> = React.MouseEvent<T, MouseEvent>;
+
 export type CardMainProps<T, E> = CardChildrenProps<T, E>;
 export type CardHeaderProps<T, E> = CardChildrenProps<T, E>;
 export type CardFooterProps<T, E> = CardChildrenProps<T, E>;
 export type CardContainerProps<T, E> = CardChildrenProps<T, E> & Pick<BaseCardProps<T, E>, 'ref'>;
 
-function Card<T, E = React.MouseEvent<T, MouseEvent>>({
+function Card<T, E = CardClickEvent<T>>({
   ref,
   renderHeader,
   renderMain,
