@@ -7,8 +7,11 @@ import type {ViewProps} from 'react-native';
 /**
  * Base card props
  */
-export interface BaseCardProps<T>
-  extends Omit<DetailedHTMLProps<HTMLAttributes<T>, T> & ViewProps, 'title' | 'ref'> {
+export interface BaseCardProps<T, E>
+  extends Omit<DetailedHTMLProps<HTMLAttributes<T>, T> & ViewProps, 'title'> {
+  /**
+   * Custom ref
+   */
   ref?: Ref<T>;
 
   /**
@@ -45,36 +48,32 @@ export interface BaseCardProps<T>
 /**
  * Card props
  */
-export interface CardProps<T> extends BaseCardProps<T> {
+export interface CardProps<T, E> extends BaseCardProps<T, E> {
   /**
    * Render the card header
    */
-  renderHeader?: (props: CardHeaderProps<T>) => ReactNode;
+  renderHeader?: (props: CardHeaderProps<T, E>) => ReactNode;
 
   /**
    * Render the card main
    */
-  renderMain?: (props: CardMainProps<T>) => ReactNode;
+  renderMain?: (props: CardMainProps<T, E>) => ReactNode;
 
   /**
    * Render the card footer
    */
-  renderFooter?: (props: CardFooterProps<T>) => ReactNode;
+  renderFooter?: (props: CardFooterProps<T, E>) => ReactNode;
 
   /**
    * Render the card container
    */
-  renderContainer?: (props: CardContainerProps<T>) => ReactNode;
+  renderContainer?: (props: CardContainerProps<T, E>) => ReactNode;
 }
 
 /**
  * Card children props
  */
-export interface CardChildrenProps<T>
-  extends Omit<
-    CardProps<T>,
-    'renderContainer' | 'renderMain' | 'renderHeader' | 'renderFooter' | 'ref'
-  > {
+export interface CardChildrenProps<T, E> extends Omit<BaseCardProps<T, E>, 'ref'> {
   /**
    * The unique ID of the component
    */
@@ -87,19 +86,19 @@ export interface CardChildrenProps<T>
   handleEvent: HandleEvent;
 }
 
-export type CardMainProps<T> = CardChildrenProps<T>;
-export type CardHeaderProps<T> = CardChildrenProps<T>;
-export type CardFooterProps<T> = CardChildrenProps<T>;
-export type CardContainerProps<T> = Pick<CardProps<T>, 'ref'> & CardChildrenProps<T>;
+export type CardMainProps<T, E> = CardChildrenProps<T, E>;
+export type CardHeaderProps<T, E> = CardChildrenProps<T, E>;
+export type CardFooterProps<T, E> = CardChildrenProps<T, E>;
+export type CardContainerProps<T, E> = CardChildrenProps<T, E> & Pick<BaseCardProps<T, E>, 'ref'>;
 
-function Card<T>({
+function Card<T, E = React.MouseEvent<T, MouseEvent>>({
   ref,
   renderHeader,
   renderMain,
   renderFooter,
   renderContainer,
   ...props
-}: CardProps<T>) {
+}: CardProps<T, E>) {
   const id = useId();
   const childrenProps = {...props, id, handleEvent};
   const header = renderHeader?.(childrenProps);

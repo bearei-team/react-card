@@ -1,6 +1,6 @@
 # react-card
 
-A basic card component that supports react and native react.
+Base card components that support React and React native
 
 ## Installation
 
