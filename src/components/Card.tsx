@@ -8,7 +8,10 @@ import type {ViewProps} from 'react-native';
  * Base card props
  */
 export interface BaseCardProps<T, E>
-  extends Omit<DetailedHTMLProps<HTMLAttributes<T>, T> & ViewProps, 'title' | 'ref'> {
+  extends Omit<DetailedHTMLProps<HTMLAttributes<T>, T> & ViewProps, 'title'> {
+  /**
+   * Custom ref
+   */
   ref?: Ref<T>;
 
   /**
