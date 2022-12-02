@@ -15,6 +15,9 @@ Base card components that support React and React native
 | shape | `square` `circle` `round` | ✘ | Set the card shape |
 | loading | `boolean` | ✘ | Loading can be used to display a placeholder while the card content is still loading |
 | disabled | `boolean` | ✘ | Whether or not to disable the card |
+| onClick | `(e: MouseEvent) => void` | ✘ | Call this function back when you click the card |
+| onTouchEnd | `(e: TouchEvent) => void` | ✘ | Call this function after pressing the card |
+| onPress | `(e: GestureResponderEvent) => void` | ✘ | Call this function after pressing the card -- react native |
 | renderHeader | `(props: CardHeaderProps) => ReactNode` | ✘ | Render the card header |
 | renderMain | `(props: CardMainProps) => ReactNode` | ✘ | Render the card main |
 | renderFooter | `(props: CardFooterProps) => ReactNode` | ✘ | Render the card footer |

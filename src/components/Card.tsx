@@ -1,14 +1,15 @@
-import type {HandleEvent} from '@bearei/react-util/lib/event';
-import handleEvent from '@bearei/react-util/lib/event';
-import type {DetailedHTMLProps, HTMLAttributes, ReactNode, Ref} from 'react';
-import {useId} from 'react';
-import type {ViewProps} from 'react-native';
+import {bindEvents, handleDefaultEvent} from '@bearei/react-util/lib/event';
+import {DetailedHTMLProps, HTMLAttributes, ReactNode, Ref, TouchEvent, useId} from 'react';
+import type {GestureResponderEvent, ViewProps} from 'react-native';
 
 /**
  * Base card props
  */
-export interface BaseCardProps<T, E>
-  extends Omit<DetailedHTMLProps<HTMLAttributes<T>, T> & ViewProps, 'title'> {
+export interface BaseCardProps<T = HTMLElement>
+  extends Omit<
+    DetailedHTMLProps<HTMLAttributes<T>, T> & ViewProps,
+    'title' | 'onClick' | 'onTouchEnd' | 'onPress'
+  > {
   /**
    * Custom ref
    */
@@ -43,79 +44,113 @@ export interface BaseCardProps<T, E>
    * The main area content of the card
    */
   content?: ReactNode;
+
+  /**
+   * Call this function back when you click the card
+   */
+  onClick?: (e: React.MouseEvent<T, MouseEvent>) => void;
+
+  /**
+   * Call this function after pressing the card
+   */
+  onTouchEnd?: (e: TouchEvent<T>) => void;
+
+  /**
+   * Call this function after pressing the card -- react native
+   */
+  onPress?: (e: GestureResponderEvent) => void;
 }
 
 /**
  * Card props
  */
-export interface CardProps<T, E> extends BaseCardProps<T, E> {
+export interface CardProps<T> extends BaseCardProps<T> {
   /**
    * Render the card header
    */
-  renderHeader?: (props: CardHeaderProps<T, E>) => ReactNode;
+  renderHeader?: (props: CardHeaderProps) => ReactNode;
 
   /**
    * Render the card main
    */
-  renderMain?: (props: CardMainProps<T, E>) => ReactNode;
+  renderMain?: (props: CardMainProps) => ReactNode;
 
   /**
    * Render the card footer
    */
-  renderFooter?: (props: CardFooterProps<T, E>) => ReactNode;
+  renderFooter?: (props: CardFooterProps) => ReactNode;
 
   /**
    * Render the card container
    */
-  renderContainer?: (props: CardContainerProps<T, E>) => ReactNode;
+  renderContainer?: (props: CardContainerProps<T>) => ReactNode;
 }
 
 /**
  * Card children props
  */
-export interface CardChildrenProps<T, E> extends Omit<BaseCardProps<T, E>, 'ref'> {
+export interface CardChildrenProps extends Omit<BaseCardProps, 'ref'> {
   /**
    * The unique ID of the component
    */
   id: string;
   children?: ReactNode;
-
-  /**
-   * Used to handle some common default events
-   */
-  handleEvent: HandleEvent;
 }
 
-export type CardClickEvent<T> = React.MouseEvent<T, MouseEvent>;
+export type CardMainProps = CardChildrenProps;
+export type CardHeaderProps = CardChildrenProps;
+export type CardFooterProps = CardChildrenProps;
+export type CardContainerProps<T> = CardChildrenProps & Pick<BaseCardProps<T>, 'ref'>;
 
-export type CardMainProps<T, E> = CardChildrenProps<T, E>;
-export type CardHeaderProps<T, E> = CardChildrenProps<T, E>;
-export type CardFooterProps<T, E> = CardChildrenProps<T, E>;
-export type CardContainerProps<T, E> = CardChildrenProps<T, E> & Pick<BaseCardProps<T, E>, 'ref'>;
+const Card = <T extends HTMLElement>(props: CardProps<T>) => {
+  const {
+    ref,
+    loading,
+    renderHeader,
+    renderMain,
+    renderFooter,
+    renderContainer,
+    onClick,
+    onTouchEnd,
+    onPress,
+    ...args
+  } = props;
 
-function Card<T, E = CardClickEvent<T>>({
-  ref,
-  renderHeader,
-  renderMain,
-  renderFooter,
-  renderContainer,
-  ...props
-}: CardProps<T, E>) {
   const id = useId();
-  const childrenProps = {...props, id, handleEvent};
+  const events = Object.keys(props).filter(key => key.startsWith('on'));
+  const childrenProps = {...args, loading, id};
+
+  const handleCallback = (key: string) => {
+    const response = !loading;
+    const event = {
+      onClick: handleDefaultEvent((e: React.MouseEvent<T, MouseEvent>) => response && onClick?.(e)),
+      onTouchEnd: handleDefaultEvent((e: TouchEvent<T>) => response && onTouchEnd?.(e)),
+      onPress: handleDefaultEvent((e: GestureResponderEvent) => response && onPress?.(e)),
+    };
+
+    return event[key as keyof typeof event];
+  };
+
   const header = renderHeader?.(childrenProps);
   const footer = renderFooter?.(childrenProps);
-  const main = (
+  const main = renderMain?.(childrenProps);
+  const content = (
     <>
       {header}
-      {renderMain?.(childrenProps)}
+      {main}
       {footer}
     </>
   );
 
-  const container = renderContainer?.({...childrenProps, children: main, ref}) ?? main;
+  const container =
+    renderContainer?.({
+      ...childrenProps,
+      children: content,
+      ref,
+      ...bindEvents(events, handleCallback),
+    }) ?? content;
 
   return <>{container}</>;
-}
+};
 
 export default Card;

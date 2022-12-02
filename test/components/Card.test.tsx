@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
-import {render} from '../utils/testUtils';
-import Card from '../../src/components/Card';
 import React from 'react';
+import Card from '../../src/components/Card';
+import {render} from '../utils/testUtils';
 
 describe('test/components/Card.test.ts', () => {
   test('It should be a render card', async () => {
