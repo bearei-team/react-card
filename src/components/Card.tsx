@@ -121,11 +121,18 @@ const Card = <T extends HTMLElement>(props: CardProps<T>) => {
   const childrenProps = {...args, loading, id};
 
   const handleCallback = (key: string) => {
-    const response = !loading;
+    const handleResponse = <E,>(e: E, callback?: (e: E) => void) => {
+      const response = !loading;
+
+      response && callback?.(e);
+    };
+
     const event = {
-      onClick: handleDefaultEvent((e: React.MouseEvent<T, MouseEvent>) => response && onClick?.(e)),
-      onTouchEnd: handleDefaultEvent((e: TouchEvent<T>) => response && onTouchEnd?.(e)),
-      onPress: handleDefaultEvent((e: GestureResponderEvent) => response && onPress?.(e)),
+      onClick: handleDefaultEvent((e: React.MouseEvent<T, MouseEvent>) =>
+        handleResponse(e, onClick),
+      ),
+      onTouchEnd: handleDefaultEvent((e: TouchEvent<T>) => handleResponse(e, onTouchEnd)),
+      onPress: handleDefaultEvent((e: GestureResponderEvent) => handleResponse(e, onPress)),
     };
 
     return event[key as keyof typeof event];
@@ -142,13 +149,12 @@ const Card = <T extends HTMLElement>(props: CardProps<T>) => {
     </>
   );
 
-  const container =
-    renderContainer?.({
-      ...childrenProps,
-      children: content,
-      ref,
-      ...bindEvents(events, handleCallback),
-    }) ?? content;
+  const container = renderContainer?.({
+    ...childrenProps,
+    children: content,
+    ref,
+    ...bindEvents(events, handleCallback),
+  });
 
   return <>{container}</>;
 };
