@@ -1,6 +1,6 @@
 {
   "name": "@bearei/react-card",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "module": "./lib-esm/index.js",

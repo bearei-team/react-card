@@ -16,22 +16,22 @@ export interface BaseCardProps<T = HTMLElement>
   ref?: Ref<T>;
 
   /**
-   * Card header title
+   * Card title
    */
   title?: ReactNode;
 
   /**
-   * Set the card size
+   * Card size
    */
   size?: 'small' | 'medium' | 'large';
 
   /**
-   * Set the card shape
+   * Card shape
    */
   shape?: 'square' | 'circle' | 'round';
 
   /**
-   * Loading can be used to display a placeholder while the card content is still loading
+   * Whether the card is loading
    */
   loading?: boolean;
 
@@ -41,22 +41,22 @@ export interface BaseCardProps<T = HTMLElement>
   disabled?: boolean;
 
   /**
-   * The main area content of the card
+   * Card content
    */
   content?: ReactNode;
 
   /**
-   * Call this function back when you click the card
+   * This function is called when card is clicked
    */
   onClick?: (e: React.MouseEvent<T, MouseEvent>) => void;
 
   /**
-   * Call this function after pressing the card
+   * This function is called when the card is pressed
    */
   onTouchEnd?: (e: TouchEvent<T>) => void;
 
   /**
-   * Call this function after pressing the card -- react native
+   * This function is called when the card is pressed -- react native
    */
   onPress?: (e: GestureResponderEvent) => void;
 }
@@ -106,13 +106,13 @@ const Card = <T extends HTMLElement>(props: CardProps<T>) => {
   const {
     ref,
     loading,
+    onClick,
+    onPress,
+    onTouchEnd,
     renderHeader,
     renderMain,
     renderFooter,
     renderContainer,
-    onClick,
-    onTouchEnd,
-    onPress,
     ...args
   } = props;
 
@@ -121,9 +121,9 @@ const Card = <T extends HTMLElement>(props: CardProps<T>) => {
   const childrenProps = {...args, loading, id};
 
   const handleResponse = <E,>(e: E, callback?: (e: E) => void) => {
-    const response = !loading;
+    const isResponse = !loading;
 
-    response && callback?.(e);
+    isResponse && callback?.(e);
   };
 
   const handleCallback = (key: string) => {

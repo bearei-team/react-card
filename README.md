@@ -10,14 +10,15 @@ Base card components that support React and React native
 
 | Name | Type | Required | Description |
 | :-- | --: | --: | :-- |
-| title | `ReactNode` | ✘ | Card header title |
-| size | `small` `medium` `large` | ✘ | Set the card size |
-| shape | `square` `circle` `round` | ✘ | Set the card shape |
-| loading | `boolean` | ✘ | Loading can be used to display a placeholder while the card content is still loading |
+| title | `ReactNode` | ✘ | Card title |
+| size | `small` `medium` `large` | ✘ | Card size |
+| shape | `square` `circle` `round` | ✘ | Card shape |
+| loading | `boolean` | ✘ | Whether the card is loading |
 | disabled | `boolean` | ✘ | Whether or not to disable the card |
-| onClick | `(e: MouseEvent) => void` | ✘ | Call this function back when you click the card |
-| onTouchEnd | `(e: TouchEvent) => void` | ✘ | Call this function after pressing the card |
-| onPress | `(e: GestureResponderEvent) => void` | ✘ | Call this function after pressing the card -- react native |
+| content | `ReactNode` | ✘ | Card content |
+| onClick | `(e: React.MouseEvent) => void` | ✘ | This function is called when card is clicked |
+| onTouchEnd | `(e: React.TouchEvent) => void` | ✘ | This function is called when the card is pressed |
+| onPress | `(e: GestureResponderEvent) => void` | ✘ | This function is called when the card is pressed -- react native |
 | renderHeader | `(props: CardHeaderProps) => ReactNode` | ✘ | Render the card header |
 | renderMain | `(props: CardMainProps) => ReactNode` | ✘ | Render the card main |
 | renderFooter | `(props: CardFooterProps) => ReactNode` | ✘ | Render the card footer |
