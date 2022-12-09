@@ -21,8 +21,8 @@ Base card components that support React and React native
 | onPress | `(e: GestureResponderEvent) => void` | ✘ | This function is called when the card is pressed -- react native |
 | renderHeader | `(props: CardHeaderProps) => ReactNode` | ✘ | Render the card header |
 | renderMain | `(props: CardMainProps) => ReactNode` | ✘ | Render the card main |
-| renderFooter | `(props: CardFooterProps) => ReactNode` | ✘ | Render the card footer |
-| renderContainer | `(props: CardContainerProps) => ReactNode` | ✘ | Render the card container |
+| renderFooter | `(props: CardFooterProps) => ReactNode` | ✔ | Render the card footer |
+| renderContainer | `(props: CardContainerProps) => ReactNode` | ✔ | Render the card container |
 
 ## Use
 

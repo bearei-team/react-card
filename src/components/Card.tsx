@@ -71,19 +71,19 @@ export interface CardProps<T> extends BaseCardProps<T> {
   renderHeader?: (props: CardHeaderProps) => ReactNode;
 
   /**
-   * Render the card main
-   */
-  renderMain?: (props: CardMainProps) => ReactNode;
-
-  /**
    * Render the card footer
    */
   renderFooter?: (props: CardFooterProps) => ReactNode;
 
   /**
+   * Render the card main
+   */
+  renderMain: (props: CardMainProps<T>) => ReactNode;
+
+  /**
    * Render the card container
    */
-  renderContainer?: (props: CardContainerProps<T>) => ReactNode;
+  renderContainer: (props: CardContainerProps) => ReactNode;
 }
 
 /**
@@ -97,15 +97,28 @@ export interface CardChildrenProps extends Omit<BaseCardProps, 'ref'> {
   children?: ReactNode;
 }
 
-export type CardMainProps = CardChildrenProps;
 export type CardHeaderProps = CardChildrenProps;
 export type CardFooterProps = CardChildrenProps;
-export type CardContainerProps<T> = CardChildrenProps & Pick<BaseCardProps<T>, 'ref'>;
+export interface CardMainProps<T>
+  extends Partial<CardChildrenProps & Pick<BaseCardProps<T>, 'ref'>> {
+  /**
+   * Card header
+   */
+  header?: ReactNode;
+
+  /**
+   * Card footer
+   */
+  footer?: ReactNode;
+}
+
+export type CardContainerProps = CardChildrenProps;
 
 const Card = <T extends HTMLElement>(props: CardProps<T>) => {
   const {
     ref,
     loading,
+    disabled,
     onClick,
     onPress,
     onTouchEnd,
@@ -118,10 +131,9 @@ const Card = <T extends HTMLElement>(props: CardProps<T>) => {
 
   const id = useId();
   const events = Object.keys(props).filter(key => key.startsWith('on'));
-  const childrenProps = {...args, loading, id};
-
+  const childrenProps = {...args, loading, disabled, id};
   const handleResponse = <E,>(e: E, callback?: (e: E) => void) => {
-    const isResponse = !loading;
+    const isResponse = !disabled && !loading;
 
     isResponse && callback?.(e);
   };
@@ -140,21 +152,15 @@ const Card = <T extends HTMLElement>(props: CardProps<T>) => {
 
   const header = renderHeader?.(childrenProps);
   const footer = renderFooter?.(childrenProps);
-  const main = renderMain?.(childrenProps);
-  const content = (
-    <>
-      {header}
-      {main}
-      {footer}
-    </>
-  );
-
-  const container = renderContainer?.({
+  const main = renderMain({
     ...childrenProps,
-    children: content,
+    header,
+    footer,
     ref,
     ...bindEvents(events, handleCallback),
   });
+
+  const container = renderContainer({...childrenProps, children: main});
 
   return <>{container}</>;
 };

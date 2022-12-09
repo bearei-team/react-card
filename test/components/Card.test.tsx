@@ -10,8 +10,14 @@ describe('test/components/Card.test.ts', () => {
       <Card
         title="card"
         renderHeader={({title}) => <div data-cy="header">{title}</div>}
-        renderMain={({title}) => <div data-cy="card">{title}</div>}
         renderFooter={({title}) => <div data-cy="footer">{title}</div>}
+        renderMain={({title, header, footer}) => (
+          <div data-cy="card">
+            {header}
+            {title}
+            {footer}
+          </div>
+        )}
         renderContainer={({id, children}) => (
           <div data-cy="container" data-id={id} tabIndex={1}>
             {children}
@@ -33,56 +39,70 @@ describe('test/components/Card.test.ts', () => {
     const {getByDataCy} = render(
       <Card
         onClick={e => (eventType = e?.type)}
-        renderMain={({title}) => <div data-cy="card">{title}</div>}
-        renderContainer={({id, children, onClick}) => (
-          <div data-cy="container" data-id={id} tabIndex={1} onClick={onClick}>
+        renderMain={({title, onClick}) => (
+          <div data-cy="card" onClick={onClick}>
+            {title}
+          </div>
+        )}
+        renderContainer={({id, children}) => (
+          <div data-cy="container" data-id={id} tabIndex={1}>
             {children}
           </div>
         )}
       />,
     );
 
-    await user.click(getByDataCy('container'));
+    await user.click(getByDataCy('card'));
     expect(eventType).toEqual('click');
   });
 
   test('It should be a card disabled', async () => {
+    const user = userEvent.setup();
     let eventType!: string | undefined;
 
     const {getByDataCy} = render(
       <Card
         disabled
         onClick={e => (eventType = e?.type)}
-        renderMain={({title}) => <div data-cy="card">{title}</div>}
-        renderContainer={({id, children, onClick}) => (
-          <div data-cy="container" data-id={id} tabIndex={1} onClick={onClick}>
+        renderMain={({title, onClick}) => (
+          <div data-cy="card" onClick={onClick}>
+            {title}
+          </div>
+        )}
+        renderContainer={({id, children}) => (
+          <div data-cy="container" data-id={id} tabIndex={1}>
             {children}
           </div>
         )}
       />,
     );
 
-    getByDataCy('container');
+    await user.click(getByDataCy('card'));
     expect(eventType).toEqual(undefined);
   });
 
   test('It should be a card loading', async () => {
+    const user = userEvent.setup();
     let eventType!: string | undefined;
 
     const {getByDataCy} = render(
       <Card
         loading
         onClick={e => (eventType = e?.type)}
-        renderMain={({title}) => <div data-cy="card">{title}</div>}
-        renderContainer={({id, children, onClick}) => (
-          <div data-cy="container" data-id={id} tabIndex={1} onClick={onClick}>
+        renderMain={({title, onClick}) => (
+          <div data-cy="card" onClick={onClick}>
+            {title}
+          </div>
+        )}
+        renderContainer={({id, children}) => (
+          <div data-cy="container" data-id={id} tabIndex={1}>
             {children}
           </div>
         )}
       />,
     );
 
-    getByDataCy('container');
+    await user.click(getByDataCy('card'));
     expect(eventType).toEqual(undefined);
   });
 });
