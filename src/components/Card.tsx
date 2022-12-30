@@ -1,11 +1,21 @@
-import {bindEvents, handleDefaultEvent} from '@bearei/react-util/lib/event';
-import {DetailedHTMLProps, HTMLAttributes, ReactNode, Ref, TouchEvent, useId} from 'react';
-import type {GestureResponderEvent, ViewProps} from 'react-native';
+import {
+  bindEvents,
+  handleDefaultEvent,
+} from '@bearei/react-util/lib/commonjs/event';
+import {
+  DetailedHTMLProps,
+  HTMLAttributes,
+  ReactNode,
+  Ref,
+  TouchEvent,
+  useId,
+} from 'react';
+import type { GestureResponderEvent, ViewProps } from 'react-native';
 
 /**
  * Base card props
  */
-export interface BaseCardProps<T = HTMLElement>
+export interface BaseCardProps<T>
   extends Omit<
     DetailedHTMLProps<HTMLAttributes<T>, T> & ViewProps,
     'title' | 'onClick' | 'onTouchEnd' | 'onPress'
@@ -68,12 +78,12 @@ export interface CardProps<T> extends BaseCardProps<T> {
   /**
    * Render the card header
    */
-  renderHeader?: (props: CardHeaderProps) => ReactNode;
+  renderHeader?: (props: CardHeaderProps<T>) => ReactNode;
 
   /**
    * Render the card footer
    */
-  renderFooter?: (props: CardFooterProps) => ReactNode;
+  renderFooter?: (props: CardFooterProps<T>) => ReactNode;
 
   /**
    * Render the card main
@@ -83,13 +93,13 @@ export interface CardProps<T> extends BaseCardProps<T> {
   /**
    * Render the card container
    */
-  renderContainer: (props: CardContainerProps) => ReactNode;
+  renderContainer: (props: CardContainerProps<T>) => ReactNode;
 }
 
 /**
  * Card children props
  */
-export interface CardChildrenProps extends Omit<BaseCardProps, 'ref'> {
+export interface CardChildrenProps<T> extends Omit<BaseCardProps<T>, 'ref'> {
   /**
    * The unique ID of the component
    */
@@ -97,10 +107,10 @@ export interface CardChildrenProps extends Omit<BaseCardProps, 'ref'> {
   children?: ReactNode;
 }
 
-export type CardHeaderProps = CardChildrenProps;
-export type CardFooterProps = CardChildrenProps;
+export type CardHeaderProps<T> = CardChildrenProps<T>;
+export type CardFooterProps<T> = CardChildrenProps<T>;
 export interface CardMainProps<T>
-  extends Partial<CardChildrenProps & Pick<BaseCardProps<T>, 'ref'>> {
+  extends Partial<CardChildrenProps<T> & Pick<BaseCardProps<T>, 'ref'>> {
   /**
    * Card header
    */
@@ -112,9 +122,9 @@ export interface CardMainProps<T>
   footer?: ReactNode;
 }
 
-export type CardContainerProps = CardChildrenProps;
+export type CardContainerProps<T> = CardChildrenProps<T>;
 
-const Card = <T extends HTMLElement>(props: CardProps<T>) => {
+const Card = <T extends HTMLElement = HTMLElement>(props: CardProps<T>) => {
   const {
     ref,
     loading,
@@ -131,7 +141,7 @@ const Card = <T extends HTMLElement>(props: CardProps<T>) => {
 
   const id = useId();
   const events = Object.keys(props).filter(key => key.startsWith('on'));
-  const childrenProps = {...args, loading, disabled, id};
+  const childrenProps = { ...args, loading, disabled, id };
   const handleResponse = <E,>(e: E, callback?: (e: E) => void) => {
     const isResponse = !disabled && !loading;
 
@@ -143,8 +153,12 @@ const Card = <T extends HTMLElement>(props: CardProps<T>) => {
       onClick: handleDefaultEvent((e: React.MouseEvent<T, MouseEvent>) =>
         handleResponse(e, onClick),
       ),
-      onTouchEnd: handleDefaultEvent((e: TouchEvent<T>) => handleResponse(e, onTouchEnd)),
-      onPress: handleDefaultEvent((e: GestureResponderEvent) => handleResponse(e, onPress)),
+      onTouchEnd: handleDefaultEvent((e: TouchEvent<T>) =>
+        handleResponse(e, onTouchEnd),
+      ),
+      onPress: handleDefaultEvent((e: GestureResponderEvent) =>
+        handleResponse(e, onPress),
+      ),
     };
 
     return event[key as keyof typeof event];
@@ -154,13 +168,13 @@ const Card = <T extends HTMLElement>(props: CardProps<T>) => {
   const footer = renderFooter?.(childrenProps);
   const main = renderMain({
     ...childrenProps,
+    ref,
     header,
     footer,
-    ref,
     ...bindEvents(events, handleCallback),
   });
 
-  const container = renderContainer({...childrenProps, children: main});
+  const container = renderContainer({ ...childrenProps, children: main });
 
   return <>{container}</>;
 };
