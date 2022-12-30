@@ -1,24 +1,24 @@
 import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Card from '../../src/components/Card';
-import {render} from '../utils/testUtils';
-import userEvent from '@testing-library/user-event';
+import { render } from '../utils/test_utils';
 
 describe('test/components/Card.test.ts', () => {
   test('It should be a render card', async () => {
-    const {getByDataCy} = render(
+    const { getByDataCy } = render(
       <Card
         title="card"
-        renderHeader={({title}) => <div data-cy="header">{title}</div>}
-        renderFooter={({title}) => <div data-cy="footer">{title}</div>}
-        renderMain={({title, header, footer}) => (
+        renderHeader={({ title }) => <div data-cy="header">{title}</div>}
+        renderFooter={({ title }) => <div data-cy="footer">{title}</div>}
+        renderMain={({ title, header, footer }) => (
           <div data-cy="card">
             {header}
             {title}
             {footer}
           </div>
         )}
-        renderContainer={({id, children}) => (
+        renderContainer={({ id, children }) => (
           <div data-cy="container" data-id={id} tabIndex={1}>
             {children}
           </div>
@@ -36,15 +36,15 @@ describe('test/components/Card.test.ts', () => {
     const user = userEvent.setup();
     let eventType!: string | undefined;
 
-    const {getByDataCy} = render(
+    const { getByDataCy } = render(
       <Card
         onClick={e => (eventType = e?.type)}
-        renderMain={({title, onClick}) => (
+        renderMain={({ title, onClick }) => (
           <div data-cy="card" onClick={onClick}>
             {title}
           </div>
         )}
-        renderContainer={({id, children}) => (
+        renderContainer={({ id, children }) => (
           <div data-cy="container" data-id={id} tabIndex={1}>
             {children}
           </div>
@@ -60,16 +60,16 @@ describe('test/components/Card.test.ts', () => {
     const user = userEvent.setup();
     let eventType!: string | undefined;
 
-    const {getByDataCy} = render(
+    const { getByDataCy } = render(
       <Card
         disabled
         onClick={e => (eventType = e?.type)}
-        renderMain={({title, onClick}) => (
+        renderMain={({ title, onClick }) => (
           <div data-cy="card" onClick={onClick}>
             {title}
           </div>
         )}
-        renderContainer={({id, children}) => (
+        renderContainer={({ id, children }) => (
           <div data-cy="container" data-id={id} tabIndex={1}>
             {children}
           </div>
@@ -85,16 +85,16 @@ describe('test/components/Card.test.ts', () => {
     const user = userEvent.setup();
     let eventType!: string | undefined;
 
-    const {getByDataCy} = render(
+    const { getByDataCy } = render(
       <Card
         loading
         onClick={e => (eventType = e?.type)}
-        renderMain={({title, onClick}) => (
+        renderMain={({ title, onClick }) => (
           <div data-cy="card" onClick={onClick}>
             {title}
           </div>
         )}
-        renderContainer={({id, children}) => (
+        renderContainer={({ id, children }) => (
           <div data-cy="container" data-id={id} tabIndex={1}>
             {children}
           </div>
