@@ -34,10 +34,10 @@ import Card from '@bearei/react-card';
 const card = (
   <Card
     title="card"
-    renderHeader={({title}) => <div>{title}</div>}
-    renderMain={({title}) => <div>{title}</div>}
-    renderFooter={({title}) => <div>{title}</div>}
-    renderContainer={({id, children}) => (
+    renderHeader={({ title }) => <div>{title}</div>}
+    renderMain={({ title }) => <div>{title}</div>}
+    renderFooter={({ title }) => <div>{title}</div>}
+    renderContainer={({ id, children }) => (
       <div data-id={id} tabIndex={1}>
         {children}
       </div>
