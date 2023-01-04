@@ -5,6 +5,7 @@ import {
 import {
   DetailedHTMLProps,
   HTMLAttributes,
+  MouseEvent,
   ReactNode,
   Ref,
   TouchEvent,
@@ -58,7 +59,7 @@ export interface BaseCardProps<T>
   /**
    * This function is called when card is clicked
    */
-  onClick?: (e: React.MouseEvent<T, MouseEvent>) => void;
+  onClick?: (e: MouseEvent<T>) => void;
 
   /**
    * This function is called when the card is pressed
@@ -123,6 +124,7 @@ export interface CardMainProps<T>
 }
 
 export type CardContainerProps<T> = CardChildrenProps<T>;
+export type EventType = 'onClick' | 'onPress' | 'onTouchEnd';
 
 const Card = <T extends HTMLElement = HTMLElement>(props: CardProps<T>) => {
   const {
@@ -140,7 +142,11 @@ const Card = <T extends HTMLElement = HTMLElement>(props: CardProps<T>) => {
   } = props;
 
   const id = useId();
-  const events = Object.keys(props).filter(key => key.startsWith('on'));
+  const bindEvenNames = ['onClick', 'onPress', 'onTouchEnd'];
+  const eventNames = Object.keys(props).filter(key =>
+    bindEvenNames.includes(key),
+  ) as EventType[];
+
   const childrenProps = { ...args, loading, disabled, id };
   const handleResponse = <E,>(e: E, callback?: (e: E) => void) => {
     const isResponse = !disabled && !loading;
@@ -148,9 +154,9 @@ const Card = <T extends HTMLElement = HTMLElement>(props: CardProps<T>) => {
     isResponse && callback?.(e);
   };
 
-  const handleCallback = (key: string) => {
-    const event = {
-      onClick: handleDefaultEvent((e: React.MouseEvent<T, MouseEvent>) =>
+  const handleCallback = (event: EventType) => {
+    const eventFunctions = {
+      onClick: handleDefaultEvent((e: MouseEvent<T>) =>
         handleResponse(e, onClick),
       ),
       onTouchEnd: handleDefaultEvent((e: TouchEvent<T>) =>
@@ -161,7 +167,7 @@ const Card = <T extends HTMLElement = HTMLElement>(props: CardProps<T>) => {
       ),
     };
 
-    return event[key as keyof typeof event];
+    return eventFunctions[event];
   };
 
   const header = renderHeader?.(childrenProps);
@@ -171,7 +177,11 @@ const Card = <T extends HTMLElement = HTMLElement>(props: CardProps<T>) => {
     ref,
     header,
     footer,
-    ...bindEvents(events, handleCallback),
+    ...(bindEvents(eventNames, handleCallback) as {
+      onClick?: (e: MouseEvent<T>) => void;
+      onTouchEnd?: (e: TouchEvent<T>) => void;
+      onPress?: (e: GestureResponderEvent) => void;
+    }),
   });
 
   const container = renderContainer({ ...childrenProps, children: main });
