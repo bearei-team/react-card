@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Card from '../../src/components/Card';
-import { render } from '../utils/test_utils';
+import { render } from '../utils/test-utils';
 
 describe('test/components/Card.test.ts', () => {
   test('It should be a render card', async () => {
