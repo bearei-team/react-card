@@ -57,6 +57,11 @@ export interface BaseCardProps<T>
   content?: ReactNode;
 
   /**
+   * Whether the card content is set to padding
+   */
+  padding?: boolean;
+
+  /**
    * This function is called when card is clicked
    */
   onClick?: (e: MouseEvent<T>) => void;

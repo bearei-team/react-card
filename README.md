@@ -15,6 +15,7 @@ Base card components that support React and React native
 | shape | `square` `circle` `round` | ✘ | Card shape |
 | loading | `boolean` | ✘ | Whether the card is loading |
 | disabled | `boolean` | ✘ | Whether or not to disable the card |
+| padding | `boolean` | ✘ | Whether the Card content is set to padding |
 | content | `ReactNode` | ✘ | Card content |
 | onClick | `(e: React.MouseEvent) => void` | ✘ | This function is called when card is clicked |
 | onTouchEnd | `(e: React.TouchEvent) => void` | ✘ | This function is called when the card is pressed |
