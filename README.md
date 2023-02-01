@@ -11,6 +11,8 @@ Base card components that support React and React native
 | Name | Type | Required | Description |
 | :-- | --: | --: | :-- |
 | title | `ReactNode` | ✘ | Card title |
+| header | `ReactNode` | ✘ | Card header |
+| footer | `ReactNode` | ✘ | Card footer |
 | size | `small` `medium` `large` | ✘ | Card size |
 | shape | `square` `circle` `round` | ✘ | Card shape |
 | loading | `boolean` | ✘ | Whether the card is loading |
@@ -21,8 +23,8 @@ Base card components that support React and React native
 | onTouchEnd | `(e: React.TouchEvent) => void` | ✘ | This function is called when the card is pressed |
 | onPress | `(e: GestureResponderEvent) => void` | ✘ | This function is called when the card is pressed -- react native |
 | renderHeader | `(props: CardHeaderProps) => ReactNode` | ✘ | Render the card header |
-| renderMain | `(props: CardMainProps) => ReactNode` | ✘ | Render the card main |
-| renderFooter | `(props: CardFooterProps) => ReactNode` | ✔ | Render the card footer |
+| renderMain | `(props: CardMainProps) => ReactNode` | ✔ | Render the card main |
+| renderFooter | `(props: CardFooterProps) => ReactNode` | ✘ | Render the card footer |
 | renderContainer | `(props: CardContainerProps) => ReactNode` | ✔ | Render the card container |
 
 ## Use
