@@ -32,6 +32,16 @@ export interface BaseCardProps<T>
   title?: ReactNode;
 
   /**
+   * Card header
+   */
+  header?: ReactNode;
+
+  /**
+   * Card footer
+   */
+  footer?: ReactNode;
+
+  /**
    * Card size
    */
   size?: 'small' | 'medium' | 'large';
@@ -115,18 +125,9 @@ export interface CardChildrenProps<T> extends Omit<BaseCardProps<T>, 'ref'> {
 
 export type CardHeaderProps<T> = CardChildrenProps<T>;
 export type CardFooterProps<T> = CardChildrenProps<T>;
-export interface CardMainProps<T>
-  extends Partial<CardChildrenProps<T> & Pick<BaseCardProps<T>, 'ref'>> {
-  /**
-   * Card header
-   */
-  header?: ReactNode;
-
-  /**
-   * Card footer
-   */
-  footer?: ReactNode;
-}
+export type CardMainProps<T> = Partial<
+  CardChildrenProps<T> & Pick<BaseCardProps<T>, 'ref' | 'header' | 'footer'>
+>;
 
 export type CardContainerProps<T> = CardChildrenProps<T>;
 export type EventType = 'onClick' | 'onPress' | 'onTouchEnd';
