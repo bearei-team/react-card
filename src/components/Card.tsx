@@ -72,6 +72,11 @@ export interface BaseCardProps<T>
   padding?: boolean;
 
   /**
+   * Whether the card is set to border
+   */
+  border?: boolean;
+
+  /**
    * This function is called when card is clicked
    */
   onClick?: (e: MouseEvent<T>) => void;
